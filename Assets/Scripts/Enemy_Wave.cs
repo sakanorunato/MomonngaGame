@@ -5,30 +5,39 @@ using UnityEngine;
 public class Enemy_Wave : MonoBehaviour
 {
     public GameObject[] enemyChips;
-    public List<GameObject> pointChips = new List<GameObject>();
-    private GameObject posWave;
+    public Transform createPos;
+    private float supremeHight = 0;
+    private Vector2 playerPos;
+    private GameObject player;
     // Start is called before the first frame update
     void Start()
     {
-        GenerateWave(2);
+        CreateEnemy();
+        player = GameObject.Find("Player");
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (posWave.transform.position.y < 0)
+        if (player)
         {
-            GenerateWave(3);
+            playerPos = player.transform.position;
+            if (supremeHight - playerPos.y <= -1)
+            {
+                CreateEnemy();
+                supremeHight++;
+            }
+        }
+        else if(!player)
+        {
+            return;
         }
     }
-    void GenerateWave(float y)
+    void CreateEnemy()
     {
+        float ry = Random.Range(0f, 0.3f);
+        float rx = Random.Range(1f, -1f);
         int nextChips = Random.Range(0, enemyChips.Length);
-        pointChips.Add(Instantiate(enemyChips[nextChips], new Vector3(0f, y, 0f), Quaternion.identity));
-        Debug.Log(pointChips.Count);
-        for (int i = 0; i < pointChips.Count; i++)
-        {
-            posWave = pointChips[i];
-        }
+        Instantiate(enemyChips[nextChips], new Vector2(createPos.position.x + rx, createPos.position.y + ry), Quaternion.identity);
     }
 }

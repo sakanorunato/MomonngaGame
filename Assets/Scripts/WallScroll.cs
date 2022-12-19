@@ -4,39 +4,22 @@ using UnityEngine;
 
 public class WallScroll : MonoBehaviour
 {
-    private GameObject player;
-    Player pScript;
-    private Vector2 p_Pos;
-    public GameObject scrollP;
-    private Vector2 screenPos;
+    public float movePos;
+    private Vector2 viewPos;
     // Start is called before the first frame update
     void Start()
     {
-        player = GameObject.Find("Player");
-        pScript = player.GetComponent<Player>();
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        //ÉvÉåÉCÉÑÅ[ÇÃéÊìæ
-       if (player)
+        viewPos = Camera.main.WorldToViewportPoint(transform.position);
+        if (viewPos.y < -1)
         {
-            p_Pos = player.transform.position;
+            transform.position = new Vector2(transform.position.x, transform.position.y + movePos);
         }
-        else if (!player)
-        {
-            return;
-        }
-        screenPos = Camera.main.WorldToScreenPoint(p_Pos);
-        if (screenPos.y >= Screen.height / 2 && pScript.wallCheck == false)
-        {
-            transform.Translate(0f, -0.01f, 0f);
-            if (transform.position.y < -6)
-            {
-                transform.position = scrollP.transform.position;
-            }
-        }
+        Debug.Log(viewPos.y);
     }
-
 }

@@ -33,7 +33,6 @@ public class Player : MonoBehaviour
         }
         WallStick();
         Dead();
-        HightRange();
     }
     private void FixedUpdate()
     {
@@ -47,26 +46,16 @@ public class Player : MonoBehaviour
             wallCheck = false;
             if (Input.mousePosition.x > Screen.width / 2)
             {
-                scale.x = 0.1f;
+                scale.x = -0.3f;
                 rb.velocity = new Vector3(movePower, jumpPower, 0f);
             }
             else if (Input.mousePosition.x < Screen.width / 2)
             {
-                scale.x = -0.1f;
+                scale.x = 0.3f;
                 rb.velocity = new Vector3(-movePower, jumpPower, 0f);
             }
             transform.localScale = scale;
             jumpCheck = false;
-        }
-    }
-    void HightRange()
-    {
-        screenPos = Camera.main.WorldToScreenPoint(transform.position);
-        if (screenPos.y > Screen.height / 2)
-        {
-            screenPos.y = Screen.height / 2;
-            worldPos = Camera.main.ScreenToWorldPoint(screenPos);
-            transform.position = worldPos;
         }
     }
     //hpÇ™0Ç…Ç»Ç¡ÇΩÇÁéÄÇ 
@@ -91,14 +80,6 @@ public class Player : MonoBehaviour
             hp--;
         }
     }
-    //ê⁄êGÇµÇΩÇÁÉvÉåÉCÉÑÅ[Çì|Ç∑
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.gameObject.tag == "DeadZone")
-        {
-            hp = 0;
-        }
-    }
     private void OnCollisionExit2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Wall")
@@ -109,6 +90,7 @@ public class Player : MonoBehaviour
     }
     void WallStick()
     {
+        screenPos = Camera.main.WorldToScreenPoint(transform.position);
         if (wallCheck)
         {
             anim.SetBool("treeMomonga", true);
@@ -126,5 +108,10 @@ public class Player : MonoBehaviour
         {
             transform.eulerAngles = Vector3.zero;
         }
+    }
+    //â∫Ç…óéÇøÇΩÇÁéÄÇ 
+    private void OnBecameInvisible()
+    {
+        hp = 0;
     }
 }
